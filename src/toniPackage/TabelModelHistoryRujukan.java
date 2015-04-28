@@ -14,6 +14,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class TabelModelHistoryRujukan extends AbstractTableModel{
     List<HistoryRujukanEntity> md;
+    
      public TabelModelHistoryRujukan(List<HistoryRujukanEntity> md) {
         this.md = md;
     }

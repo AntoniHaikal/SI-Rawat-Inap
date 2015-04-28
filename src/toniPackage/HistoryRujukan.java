@@ -5,7 +5,10 @@
  */
 package toniPackage;
 
-import javax.swing.table.DefaultTableModel;
+import ToniPopups.DetailHistoryPop;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -16,20 +19,33 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
     /**
      * Creates new form HistoryMutasi
      */
-    private final DefaultTableModel dtm;
-    
+    RujukanDao daoRukan;
+    List<HistoryRujukanEntity> md;
+    TabelModelHistoryRujukan tmr;
+    DetailHistoryPop dhp;
+
     public HistoryRujukan() {
         initComponents();
-        
-        
-        dtm = new DefaultTableModel();
-        dtm.addColumn("No History");
-        dtm.addColumn("No Medrec");
-        dtm.addColumn("Registrasi Pasien");
-        dtm.addColumn("Asal Rujukan");
-        dtm.addColumn("Tujuan Rujukan");
-        dtm.addColumn("Tanggal Rujukan");
-        jTable1.setModel(dtm);
+        defaultload();
+
+    }
+
+    private void defaultload() {
+        daoRukan = new RujukanDao();
+        md = daoRukan.semua();
+        tmr = new TabelModelHistoryRujukan(md);
+        tblRujukan.setModel(tmr);
+        lebarkolum();
+    }
+
+    private void lebarkolum() {
+        TableColumn kolum;
+        tblRujukan.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        int[] lebar = {90, 120, 90, 120, 120, 120, 120, 120, 120, 90};
+        for (int i = 0; i < tblRujukan.getColumnCount(); i++) {
+            kolum = tblRujukan.getColumnModel().getColumn(i);
+            kolum.setPreferredWidth(lebar[i]);
+        }
     }
 
     /**
@@ -44,19 +60,19 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        nohistoryFil = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        regpasFil = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        tanggaRujukanPrtama = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        tanggalRujukanKedua = new javax.swing.JTextField();
+        btnCari = new javax.swing.JButton();
+        btnReset = new javax.swing.JButton();
+        btnCetak = new javax.swing.JButton();
+        btnRekap = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblRujukan = new javax.swing.JTable();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "HISTORY RUJUKAN", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 24))); // NOI18N
         jPanel1.setLayout(new java.awt.CardLayout());
@@ -65,19 +81,19 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Regpas");
 
-        jLabel3.setText("Tanggal Mutasi");
+        jLabel3.setText("Tanggal Rujukani");
 
         jLabel4.setText("s/d");
 
-        jButton1.setText("Cari");
+        btnCari.setText("Cari");
 
-        jButton2.setText("Reset");
+        btnReset.setText("Reset");
 
-        jButton3.setText("Cetak");
+        btnCetak.setText("Cetak");
 
-        jButton4.setText("Rekap Perbulan");
+        btnRekap.setText("Rekap Perbulan");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblRujukan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -88,7 +104,12 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblRujukan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblRujukanMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblRujukan);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -101,28 +122,28 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(nohistoryFil, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(regpasFil, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCari, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tanggaRujukanPrtama, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tanggalRujukanKedua, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)))
+                        .addComponent(btnRekap, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -130,21 +151,21 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nohistoryFil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(regpasFil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCari)
+                    .addComponent(btnReset))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tanggaRujukanPrtama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tanggalRujukanKedua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCetak)
+                    .addComponent(btnRekap, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -155,12 +176,21 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tblRujukanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRujukanMouseClicked
+        // TODO add your handling code here:
+        dhp = new DetailHistoryPop();
+        int i = tblRujukan.getSelectedRow();
+        String icd = (String) tmr.getValueAt(i, 0);
+        dhp.tampilDetailRujukan(icd);
+        int option = JOptionPane.showConfirmDialog(null, dhp, "Detail Rujukan", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+    }//GEN-LAST:event_tblRujukanMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnCari;
+    private javax.swing.JButton btnCetak;
+    private javax.swing.JButton btnRekap;
+    private javax.swing.JButton btnReset;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -168,10 +198,10 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField nohistoryFil;
+    private javax.swing.JTextField regpasFil;
+    private javax.swing.JTextField tanggaRujukanPrtama;
+    private javax.swing.JTextField tanggalRujukanKedua;
+    private javax.swing.JTable tblRujukan;
     // End of variables declaration//GEN-END:variables
 }
