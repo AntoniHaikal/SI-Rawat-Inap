@@ -9,6 +9,7 @@ import Sistem_monitoring_mutasi_ri.frmMasterKamar;
 import Sistem_monitoring_mutasi_ri.frmPendaftaran;
 import javax.swing.JDesktopPane;
 import javax.swing.UIManager;
+import toniPackage.HistoryRujukan;
 
 /**
  *
@@ -45,7 +46,7 @@ public class main_rawat_inap extends javax.swing.JFrame {
         jMenu10 = new javax.swing.JMenu();
         jMenuItem12 = new javax.swing.JMenuItem();
         jMenu11 = new javax.swing.JMenu();
-        jMenuItem13 = new javax.swing.JMenuItem();
+        rujukanMenu = new javax.swing.JMenuItem();
         jMenuItem14 = new javax.swing.JMenuItem();
         jMenuItem15 = new javax.swing.JMenuItem();
 
@@ -105,8 +106,13 @@ public class main_rawat_inap extends javax.swing.JFrame {
 
         jMenu11.setText("Laporan");
 
-        jMenuItem13.setText("Riwayat Rujukan");
-        jMenu11.add(jMenuItem13);
+        rujukanMenu.setText("Riwayat Rujukan");
+        rujukanMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rujukanMenuActionPerformed(evt);
+            }
+        });
+        jMenu11.add(rujukanMenu);
 
         jMenuItem14.setText("RIwayat Mutasi");
         jMenu11.add(jMenuItem14);
@@ -168,6 +174,14 @@ public class main_rawat_inap extends javax.swing.JFrame {
         pendaftaran.show();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void rujukanMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rujukanMenuActionPerformed
+        HistoryRujukan hr = new HistoryRujukan();
+        DP.removeAll();
+        DP.repaint();
+        DP.add(hr);
+        hr.show();
+    }//GEN-LAST:event_rujukanMenuActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -212,7 +226,6 @@ public class main_rawat_inap extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem12;
-    private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem15;
     private javax.swing.JMenuItem jMenuItem16;
@@ -220,5 +233,6 @@ public class main_rawat_inap extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem rujukanMenu;
     // End of variables declaration//GEN-END:variables
 }
