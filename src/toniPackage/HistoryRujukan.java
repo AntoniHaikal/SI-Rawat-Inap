@@ -86,6 +86,11 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
         jLabel4.setText("s/d");
 
         btnCari.setText("Cari");
+        btnCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariActionPerformed(evt);
+            }
+        });
 
         btnReset.setText("Reset");
 
@@ -177,13 +182,28 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblRujukanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRujukanMouseClicked
-        // TODO add your handling code here:
         dhp = new DetailHistoryPop();
         int i = tblRujukan.getSelectedRow();
         String icd = (String) tmr.getValueAt(i, 0);
         dhp.tampilDetailRujukan(icd);
         int option = JOptionPane.showConfirmDialog(null, dhp, "Detail Rujukan", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
     }//GEN-LAST:event_tblRujukanMouseClicked
+
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+        HistoryRujukanEntity hre = new HistoryRujukanEntity();
+        if (!"".equals(regpasFil.getText())) {
+            hre.setHistoryrujukan_id(nohistoryFil.getText());
+            hre.setRegid(Integer.parseInt(regpasFil.getText()));
+            md = daoRukan.cariHistory(hre);
+        } else {
+            hre.setHistoryrujukan_id(nohistoryFil.getText());
+            md = daoRukan.cariHistory(hre);
+        }
+
+        tmr = new TabelModelHistoryRujukan(md);
+        tblRujukan.setModel(tmr);
+        lebarkolum();
+    }//GEN-LAST:event_btnCariActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

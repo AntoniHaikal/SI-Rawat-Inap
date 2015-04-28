@@ -55,12 +55,14 @@ public class RujukanDao {
         return hasil;
     }
 
-    public List<HistoryRujukanEntity> tampilDetailRujukan(String a) {
-        String sql = "Select * from historyrujukan where historyrujukan_id = ?";
+    public List<HistoryRujukanEntity> cariHistory(HistoryRujukanEntity a) {
+        String sql = "Select * from historyrujukan where historyrujukan_id = ? AND regid = ?";
         List<HistoryRujukanEntity> hasil = new ArrayList<>();
         try {
             PreparedStatement st = koneksi.getConnection().prepareStatement(sql);
-            st.setString(1, a);
+            st.setString(1, a.getHistoryrujukan_id());
+            st.setInt(2, a.getRegid());
+            System.out.println(st+"masuk perkutut");
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 HistoryRujukanEntity md = new HistoryRujukanEntity();
