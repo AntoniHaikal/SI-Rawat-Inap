@@ -8,6 +8,7 @@ package ToniPopups;
 import Class.koneksi;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -26,6 +27,7 @@ public class DetailHistoryPop extends javax.swing.JPanel {
     public void tampilDetailRujukan(String a) {
         String sql = "Select * from historyrujukan where historyrujukan_id = ?";
         Date today = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             PreparedStatement st = koneksi.getConnection().prepareStatement(sql);
             st.setString(1, a);
@@ -38,8 +40,8 @@ public class DetailHistoryPop extends javax.swing.JPanel {
                 tugasFil.setText(rs.getString("petugasdirujuk"));
                 tmptFIl.setText(rs.getString("tujuanrujukan"));
                 tindakanAres.setText(rs.getString("perlakuanSebelumnya"));
-//                today = rs.getDate("tanggalrujukan");
-////                tanggalFil.setText(today);
+                today = rs.getDate("tanggalrujukan");
+                tanggalFil.setText(format.format(today));
                 ketArea.setText(rs.getString("ket_rujuk"));
                 if ("Internal".equals(rs.getString("status_rujukan"))){
                     intrnalRadio.setSelected(true);

@@ -6,6 +6,8 @@
 package toniPackage;
 
 import ToniPopups.DetailHistoryPop;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableColumn;
@@ -23,6 +25,8 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
     List<HistoryRujukanEntity> md;
     TabelModelHistoryRujukan tmr;
     DetailHistoryPop dhp;
+    SimpleDateFormat format;
+    Date perkutut;
 
     public HistoryRujukan() {
         initComponents();
@@ -36,6 +40,19 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
         tmr = new TabelModelHistoryRujukan(md);
         tblRujukan.setModel(tmr);
         lebarkolum();
+        setDate();
+    }
+
+    private void setDate() {
+        format = new SimpleDateFormat("yyyy-MM-dd");
+        Date haha = new Date();
+        perkutut = new Date(haha.getTime());
+        try {
+            jDateChooser1.setDate(perkutut);
+            jDateChooser3.setDate(perkutut);
+        } catch (Exception e) {
+        }
+
     }
 
     private void lebarkolum() {
@@ -64,15 +81,15 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         regpasFil = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        tanggaRujukanPrtama = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        tanggalRujukanKedua = new javax.swing.JTextField();
         btnCari = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
         btnCetak = new javax.swing.JButton();
         btnRekap = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblRujukan = new javax.swing.JTable();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jDateChooser3 = new com.toedter.calendar.JDateChooser();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "HISTORY RUJUKAN", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 24))); // NOI18N
         jPanel1.setLayout(new java.awt.CardLayout());
@@ -93,6 +110,11 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
         });
 
         btnReset.setText("Reset");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         btnCetak.setText("Cetak");
 
@@ -116,6 +138,10 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblRujukan);
 
+        jDateChooser1.setDateFormatString("yyyy-MM-dd");
+
+        jDateChooser3.setDateFormatString("yyyy-MM-dd");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -125,30 +151,36 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nohistoryFil, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(regpasFil, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCari, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tanggaRujukanPrtama, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tanggalRujukanKedua, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnRekap, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jDateChooser3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(nohistoryFil, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(regpasFil, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(8, 8, 8)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(btnCari, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnRekap, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 87, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -161,17 +193,22 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
                     .addComponent(regpasFil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCari)
                     .addComponent(btnReset))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(tanggaRujukanPrtama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(tanggalRujukanKedua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCetak)
-                    .addComponent(btnRekap, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3)
+                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(btnCetak)
+                            .addComponent(jDateChooser3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRekap)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+                .addGap(0, 9, Short.MAX_VALUE))
         );
 
         jPanel1.add(jPanel2, "card2");
@@ -191,19 +228,22 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
 
     private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
         HistoryRujukanEntity hre = new HistoryRujukanEntity();
-        if (!"".equals(regpasFil.getText())) {
-            hre.setHistoryrujukan_id(nohistoryFil.getText());
-            hre.setRegid(Integer.parseInt(regpasFil.getText()));
-            md = daoRukan.cariHistory(hre);
-        } else {
-            hre.setHistoryrujukan_id(nohistoryFil.getText());
-            md = daoRukan.cariHistory(hre);
-        }
-
+        hre.setHistoryrujukan_id(nohistoryFil.getText());
+        hre.setRegid(regpasFil.getText());
+        String awal = format.format(jDateChooser1.getDate());
+        String akhir = format.format(jDateChooser3.getDate());
+        md = daoRukan.cariHistory(hre, awal, akhir);
         tmr = new TabelModelHistoryRujukan(md);
         tblRujukan.setModel(tmr);
         lebarkolum();
     }//GEN-LAST:event_btnCariActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        // TODO add your handling code here:
+        nohistoryFil.setText("");
+        regpasFil.setText("");
+        defaultload();
+    }//GEN-LAST:event_btnResetActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -211,6 +251,8 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnCetak;
     private javax.swing.JButton btnRekap;
     private javax.swing.JButton btnReset;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private com.toedter.calendar.JDateChooser jDateChooser3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -220,8 +262,6 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nohistoryFil;
     private javax.swing.JTextField regpasFil;
-    private javax.swing.JTextField tanggaRujukanPrtama;
-    private javax.swing.JTextField tanggalRujukanKedua;
     private javax.swing.JTable tblRujukan;
     // End of variables declaration//GEN-END:variables
 }

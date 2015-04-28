@@ -12,16 +12,17 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Toni
  */
-public class TabelModelHistoryRujukan extends AbstractTableModel{
+public class TabelModelHistoryRujukan extends AbstractTableModel {
+
     List<HistoryRujukanEntity> md;
-    
-     public TabelModelHistoryRujukan(List<HistoryRujukanEntity> md) {
+
+    public TabelModelHistoryRujukan(List<HistoryRujukanEntity> md) {
         this.md = md;
     }
 
     @Override
     public int getRowCount() {
-         return md.size();
+        return md.size();
     }
 
     @Override
@@ -64,6 +65,7 @@ public class TabelModelHistoryRujukan extends AbstractTableModel{
         }
         return "gak ade";
     }
+
     @Override
     public String getColumnName(int kolum) {
         switch (kolum) {
@@ -91,5 +93,5 @@ public class TabelModelHistoryRujukan extends AbstractTableModel{
                 return "undefined";
         }
     }
-    
+
 }

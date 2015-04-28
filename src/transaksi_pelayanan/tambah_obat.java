@@ -27,9 +27,11 @@ public class tambah_obat extends javax.swing.JPanel {
     DefaultComboBoxModel combo = new DefaultComboBoxModel();
     String obat_id;
     String regid;
+    int satuan_obat;
     private String awal;
     private String akhir;
     String generate_trxobatid;
+    int informasi;
     
     public tambah_obat(String regid) {
         initComponents();
@@ -39,15 +41,16 @@ public class tambah_obat extends javax.swing.JPanel {
     }
 
    private void SettingTableCariMasterobt() {
-        TableModels = TableViews.getDefaultTableModel
+       TableModels = TableViews.getDefaultTableModel
                 (new String[]{
                     "ID Obat", 
                     "Nama Obat", 
-                    "Harga Obat" 
+                    "Harga Obat",
+                    "Stok" 
                     },
                 null, new int[]{}, null);
         tblcarimasterobat.setModel(TableModels);
-        TableViews.table(tblcarimasterobat, new int[]{150, 150, 100});
+        TableViews.table(tblcarimasterobat, new int[]{150, 150, 100, 100});
         
         TampilCariMasterobat();
     }
@@ -55,7 +58,7 @@ public class tambah_obat extends javax.swing.JPanel {
     private void TampilCariMasterobat(){
         try {
             TableModels.getDataVector().removeAllElements();
-            String query = "SELECT * FROM master_obat";
+            String query = "SELECT * FROM master_obat where stok != 0";
             PreparedStatement statement = koneksi.getConnection().prepareStatement(query);
             ResultSet res = statement.executeQuery();            
             //res = statement.executeQuery("select * from mahasiswa");
@@ -63,7 +66,8 @@ public class tambah_obat extends javax.swing.JPanel {
                 TableModels.addRow(new Object[]{
                             res.getString("obat_id"),
                             res.getString("namaobat"),
-                            res.getString("defaulharga")
+                            res.getString("defaulharga"),
+                            res.getString("stok")
                         });
                 tblcarimasterobat.setModel(TableModels); 
             }
@@ -79,16 +83,18 @@ public class tambah_obat extends javax.swing.JPanel {
                 (new String[]{
                     "ID Obat", 
                     "Nama Obat", 
-                    "Harga Obat" 
+                    "Harga Obat",
+                    "Stok" 
                     },
                 null, new int[]{}, null);
         tblcarimasterobat.setModel(TableModels);
-        TableViews.table(tblcarimasterobat, new int[]{150, 150, 100});
+        TableViews.table(tblcarimasterobat, new int[]{150, 150, 100, 100});
         
                try{
                     String query = "SELECT * FROM master_obat where obat_id like ? "
                             + "AND namaobat like ? "
-                            + "AND defaulharga like ?";
+                            + "AND defaulharga like ? "
+                            + "AND stok != 0";
                     PreparedStatement statement = koneksi.getConnection().prepareStatement(query);
                     statement.setString(1, "%" +txtidcariobt.getText()+ "%");
                     statement.setString(2, "%" +txtnamacariobt.getText()+ "%");
@@ -100,15 +106,20 @@ public class tambah_obat extends javax.swing.JPanel {
                         TableModels.addRow(new Object[]{
                                     res.getString(1),
                                     res.getString(2),
-                                    res.getString(3)
+                                    res.getString(3),
+                                    res.getString(4)
 
                                 });
                         tblcarimasterobat.setModel(TableModels); 
                     }
+                    if(informasi == 1){
                     if (baris == 0) {
                             JOptionPane.showMessageDialog(null, "Hasil Pencarian = " + baris);
                         }else{
                         JOptionPane.showMessageDialog(null, "Hasil Pencarian = " + baris);
+                    }
+                    }else{
+                        
                     }
                         statement.close();
                 }catch (Exception e){
@@ -124,6 +135,7 @@ public class tambah_obat extends javax.swing.JPanel {
             String idobat = tblcarimasterobat.getValueAt(row, 0).toString();
             String namaobat = tblcarimasterobat.getValueAt(row, 1).toString();
             String hargaobat = tblcarimasterobat.getValueAt(row, 2).toString();
+            satuan_obat = Integer.parseInt(tblcarimasterobat.getValueAt(row, 3).toString());
            
            obat_id = idobat;
            txtobat.setText(namaobat);
@@ -135,7 +147,7 @@ public class tambah_obat extends javax.swing.JPanel {
       private void inserttransaksiobat(){
         try {
             generate();
-            TableModels.getDataVector().removeAllElements();           
+            TableModels.getDataVector().removeAllElements();               
             String query = "insert into trx_obat values(?,?,?,?,?,1,now())";
             PreparedStatement statement = koneksi.getConnection().prepareStatement(query);
             statement.setString(1, generate_trxobatid);
@@ -144,8 +156,6 @@ public class tambah_obat extends javax.swing.JPanel {
             statement.setString(4, txtsatuanobt.getText());
             statement.setString(5, txttotalobt.getText());
             statement.executeUpdate();
-            TableModels.getDataVector().removeAllElements();
-            
             statement.close();           
            JOptionPane.showMessageDialog(null, "Data Berhasil Masuk...");
         } catch (Exception e) {
@@ -153,6 +163,24 @@ public class tambah_obat extends javax.swing.JPanel {
         }
         
      }
+      
+      private void updatefloorstock(){
+          String stok = Integer.toString(satuan_obat - (Integer.parseInt(txtsatuanobt.getText())));  
+          try {        
+            String query = "UPDATE master_obat SET stok = ? "
+                    + "WHERE obat_id = ?";
+            PreparedStatement statement = koneksi.getConnection().prepareStatement(query);
+            statement.setString(1, stok);
+            statement.setString(2, obat_id);
+            statement.executeUpdate();
+            statement.close();          
+          
+          //JOptionPane.showMessageDialog(null, "Data Diagnosa Berhasil diubah...");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Data Diagnosa Gagal diubah : " + ex);
+        }
+         
+      }
     
        private void generate(){
          DateFormat hour = new SimpleDateFormat("HHmmssddMMyyyy");
@@ -334,6 +362,9 @@ public class tambah_obat extends javax.swing.JPanel {
 
     private void btnsimpanobatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsimpanobatActionPerformed
         inserttransaksiobat();
+        updatefloorstock();
+        informasi = 0;
+        carimasterobat();
     }//GEN-LAST:event_btnsimpanobatActionPerformed
 
     private void tblcarimasterobatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblcarimasterobatMouseClicked
@@ -346,6 +377,7 @@ public class tambah_obat extends javax.swing.JPanel {
 
     private void btncariobtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncariobtActionPerformed
         carimasterobat();
+        informasi = 1;
     }//GEN-LAST:event_btncariobtActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

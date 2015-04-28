@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class HistoryRujukanEntity {
     private String historyrujukan_id;
-    private int regid;
+    private String regid;
     private String medrec_id;
     private String asalrujukan; //Petugas yang merujuk
     private String petugasdirujuk;//petuga yang dituju
@@ -31,11 +31,11 @@ public class HistoryRujukanEntity {
         this.historyrujukan_id = historyrujukan_id;
     }
 
-    public int getRegid() {
+    public String getRegid() {
         return regid;
     }
 
-    public void setRegid(int regid) {
+    public void setRegid(String regid) {
         this.regid = regid;
     }
 

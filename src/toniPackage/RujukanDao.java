@@ -36,7 +36,7 @@ public class RujukanDao {
             while (rs.next()) {
                 HistoryRujukanEntity md = new HistoryRujukanEntity();
                 md.setHistoryrujukan_id(rs.getString("historyrujukan_id"));
-                md.setRegid(rs.getInt("regid"));
+                md.setRegid(rs.getString("regid"));
                 md.setMedrec_id(rs.getString("medrec_id"));
                 md.setAsalrujukan(rs.getString("asalrujukan"));
                 md.setPetugasdirujuk(rs.getString("petugasdirujuk"));
@@ -55,19 +55,23 @@ public class RujukanDao {
         return hasil;
     }
 
-    public List<HistoryRujukanEntity> cariHistory(HistoryRujukanEntity a) {
-        String sql = "Select * from historyrujukan where historyrujukan_id = ? AND regid = ?";
+    public List<HistoryRujukanEntity> cariHistory(HistoryRujukanEntity a, String b, String c) {
+        String sql = "Select * from historyrujukan where historyrujukan_id Like ? AND regid Like ? AND (tanggalrujukan Between ? AND ?)";
+        System.out.println(sql);
+        System.out.println(b);
         List<HistoryRujukanEntity> hasil = new ArrayList<>();
         try {
             PreparedStatement st = koneksi.getConnection().prepareStatement(sql);
-            st.setString(1, a.getHistoryrujukan_id());
-            st.setInt(2, a.getRegid());
-            System.out.println(st+"masuk perkutut");
+            st.setString(1, "%" + a.getHistoryrujukan_id() + "%");
+            st.setString(2, "%" + a.getRegid() + "%");
+            st.setString(3, b);
+            st.setString(4, c);
+            System.out.println(st + "masuk perkutut");
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 HistoryRujukanEntity md = new HistoryRujukanEntity();
                 md.setHistoryrujukan_id(rs.getString("historyrujukan_id"));
-                md.setRegid(rs.getInt("regid"));
+                md.setRegid(rs.getString("regid"));
                 md.setMedrec_id(rs.getString("medrec_id"));
                 md.setAsalrujukan(rs.getString("asalrujukan"));
                 md.setPetugasdirujuk(rs.getString("petugasdirujuk"));

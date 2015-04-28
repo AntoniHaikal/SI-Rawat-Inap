@@ -38,7 +38,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLayeredPane2" min="-2" pref="115" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="380" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="400" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -116,12 +116,12 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="javax.swing.JButton" name="btncarimasterlayanan">
+        <Component class="javax.swing.JButton" name="btncarimasterpasien">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cari Pasien"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btncarimasterlayananActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btncarimasterpasienActionPerformed"/>
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
@@ -216,6 +216,9 @@
                       </Table>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tbltransaksilayananKeyPressed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -264,33 +267,26 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JButton" name="btneditlayanan">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Edit"/>
-                  </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
-                      <JLayeredPaneConstraints x="130" y="30" width="100" height="-1" layer="0" position="-1"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
                 <Component class="javax.swing.JButton" name="btnhapuslayanan">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Hapus"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnhapuslayananActionPerformed"/>
+                  </Events>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
-                      <JLayeredPaneConstraints x="240" y="30" width="110" height="-1" layer="0" position="-1"/>
+                      <JLayeredPaneConstraints x="130" y="30" width="110" height="-1" layer="0" position="-1"/>
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JButton" name="btndetaillayanan">
+                <Component class="javax.swing.JLabel" name="jLabel4">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Detail"/>
+                    <Property name="text" type="java.lang.String" value="Note : Enter to submit update data"/>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
-                      <JLayeredPaneConstraints x="360" y="30" width="110" height="-1" layer="0" position="-1"/>
+                      <JLayeredPaneConstraints x="580" y="20" width="210" height="40" layer="0" position="-1"/>
                     </Constraint>
                   </Constraints>
                 </Component>
@@ -338,33 +334,26 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JButton" name="btneditlayanan1">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Edit"/>
-                  </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
-                      <JLayeredPaneConstraints x="130" y="30" width="100" height="-1" layer="0" position="-1"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
                 <Component class="javax.swing.JButton" name="btnhapuslayanan1">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Hapus"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnhapuslayanan1ActionPerformed"/>
+                  </Events>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
-                      <JLayeredPaneConstraints x="240" y="30" width="110" height="-1" layer="0" position="-1"/>
+                      <JLayeredPaneConstraints x="140" y="30" width="110" height="-1" layer="0" position="-1"/>
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JButton" name="btndetaillayanan1">
+                <Component class="javax.swing.JLabel" name="jLabel5">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Detail"/>
+                    <Property name="text" type="java.lang.String" value="Note : Enter to submit update data"/>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
-                      <JLayeredPaneConstraints x="360" y="30" width="110" height="-1" layer="0" position="-1"/>
+                      <JLayeredPaneConstraints x="580" y="20" width="210" height="40" layer="0" position="-1"/>
                     </Constraint>
                   </Constraints>
                 </Component>
@@ -409,6 +398,9 @@
                           </Table>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tbltransaksiobtKeyPressed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

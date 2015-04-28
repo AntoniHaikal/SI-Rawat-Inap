@@ -4,12 +4,12 @@
  */
 package sistem_rawat_inap_puskesmas;
 
-
 import Sistem_monitoring_mutasi_ri.frmMasterKamar;
 import Sistem_monitoring_mutasi_ri.frmPendaftaran;
 import javax.swing.JDesktopPane;
 import javax.swing.UIManager;
 import toniPackage.HistoryRujukan;
+import transaksi_pelayanan.form_diagnosa;
 
 /**
  *
@@ -18,7 +18,7 @@ import toniPackage.HistoryRujukan;
 public class main_rawat_inap extends javax.swing.JFrame {
 
     JDesktopPane DP;
-    
+
     public main_rawat_inap() {
         initComponents();
         this.DP = jDesktopPane1;
@@ -98,8 +98,18 @@ public class main_rawat_inap extends javax.swing.JFrame {
         jMenuBar1.add(jMenu9);
 
         jMenu10.setText("Rekam Medis");
+        jMenu10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu10ActionPerformed(evt);
+            }
+        });
 
         jMenuItem12.setText("Diagnosa Pasien");
+        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem12ActionPerformed(evt);
+            }
+        });
         jMenu10.add(jMenuItem12);
 
         jMenuBar1.add(jMenu10);
@@ -143,7 +153,7 @@ public class main_rawat_inap extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-       frmMasterKamar masterkamar = new frmMasterKamar(DP);
+        frmMasterKamar masterkamar = new frmMasterKamar(DP);
         DP.removeAll();
         DP.repaint();
         DP.add(masterkamar);
@@ -151,15 +161,15 @@ public class main_rawat_inap extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
-       layanan_rawat_inap lay = new layanan_rawat_inap(DP);
-       DP.removeAll();
-       DP.repaint();
-       DP.add(lay);
-       lay.show();
+        layanan_rawat_inap lay = new layanan_rawat_inap(DP);
+        DP.removeAll();
+        DP.repaint();
+        DP.add(lay);
+        lay.show();
     }//GEN-LAST:event_jMenuItem16ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-      transaksi_pelayanan.form_transaksi_panel trans = new transaksi_pelayanan.form_transaksi_panel(DP,"");
+        transaksi_pelayanan.form_transaksi_panel trans = new transaksi_pelayanan.form_transaksi_panel(DP, "");
         DP.removeAll();
         DP.repaint();
         DP.add(trans);
@@ -182,6 +192,18 @@ public class main_rawat_inap extends javax.swing.JFrame {
         hr.show();
     }//GEN-LAST:event_rujukanMenuActionPerformed
 
+    private void jMenu10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu10ActionPerformed
+    }//GEN-LAST:event_jMenu10ActionPerformed
+
+    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+        // TODO add your handling code here:
+          form_diagnosa df = new form_diagnosa(DP);
+        DP.removeAll();
+        DP.repaint();
+        DP.add(df);
+        df.show();
+    }//GEN-LAST:event_jMenuItem12ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -193,12 +215,13 @@ public class main_rawat_inap extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-               if ("Nimbus".equals(info.getName())) {
+                if ("Nimbus".equals(info.getName())) {
 //                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
 //                    break;
-                }}
-                com.jtattoo.plaf.acryl.AcrylLookAndFeel.setTheme("Green", "INSERT YOUR LICENSE KEY HERE", "Tugas Akhir");
-                UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
+                }
+            }
+            com.jtattoo.plaf.acryl.AcrylLookAndFeel.setTheme("Green", "INSERT YOUR LICENSE KEY HERE", "Tugas Akhir");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(main_rawat_inap.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
