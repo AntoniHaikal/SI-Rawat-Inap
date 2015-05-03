@@ -21,25 +21,31 @@ import javax.swing.table.DefaultTableModel;
  */
 public class frmCariMedrec extends javax.swing.JInternalFrame {
 
-    private String dataku = null;
+    //private String dataku = null;
     DefaultTableModel TableModels = new DefaultTableModel();
     TableViews TableViews = new TableViews();
     JDesktopPane DP;
     PreparedStatement preparestatement;
     ResultSet resultset;
     Structure query = new Structure();
+    String medrec_id;
+    int status = 0;
     
     private YuliInterface interfaces;
     public void setInterface(YuliInterface a) {
         interfaces = a;
     }
 
-    public frmCariMedrec(JDesktopPane DP) {
+    public frmCariMedrec(JDesktopPane DP,String medrec_id,int status) {
         initComponents();
         this.DP = DP;
+        this.medrec_id = medrec_id;
+        this.status = status;
         SettingTableModel();
         Data();
         Click();
+        Thread thread = new Thread(new RunData());
+        thread.start();
     }
 
     private void Click() {
@@ -68,7 +74,7 @@ public class frmCariMedrec extends javax.swing.JInternalFrame {
     private void SettingTableModel() {
         TableModels = TableViews.getDefaultTableModel(new String[]{"No", "Nama", "Jenis Kelamin", "Golongan Darah", "Tempat/Tanggal Lahir", "Alamat", "Status", ""}, null, null, null);
         jTable1.setModel(TableModels);
-        TableViews.table(jTable1, new int[]{50, 100, 150, 150, 100, 150, 150, 0});
+        TableViews.table(jTable1, new int[]{50, 100, 150, 150, 200, 150, 150, 0});
     }
 
     
@@ -83,9 +89,10 @@ public class frmCariMedrec extends javax.swing.JInternalFrame {
         public void run() {
             try {
             ClearTable();
-
             String parameter = "";
             String field = "";
+
+            if(status == 0){
             if (jComboBox1.getSelectedIndex() == 0) {
                 field = "medrec_id";
                 parameter = jTextField1.getText();
@@ -93,6 +100,17 @@ public class frmCariMedrec extends javax.swing.JInternalFrame {
                 field = "nama";
                 parameter = jTextField1.getText();
             } 
+            }
+            if(status == 1){
+                if (jComboBox1.getSelectedIndex() == 0) {
+                field = "medrec_id";
+                parameter = medrec_id;
+            } else if (jComboBox1.getSelectedIndex() == 1) {
+                field = "nama";
+                parameter = jTextField1.getText();
+            }        
+            }
+            
             
             preparestatement = (PreparedStatement) koneksi.getConnection().prepareStatement(query.Medrec(field));
             preparestatement.setString(1, "%" + parameter + "%");

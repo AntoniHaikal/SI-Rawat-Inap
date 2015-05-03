@@ -389,6 +389,15 @@ public class tambah_layanan extends javax.swing.JPanel {
         int total = (Integer.parseInt(txtharga.getText()) * (Integer.parseInt(txtsatuan.getText())));
         txttotal.setText(Integer.toString(total));
        }
+       
+       private void bersih(){
+           txtdiagnosa.setText("");
+           txtharga.setText("");
+           txtlayanan.setText("");
+           txtpetugasmedis.setText("");
+           txtsatuan.setText("");
+           txttotal.setText("");
+       }
     
 
     /**
@@ -499,6 +508,11 @@ public class tambah_layanan extends javax.swing.JPanel {
         jLayeredPane2.add(btnsimpanlayan, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         btnbersihlayan.setText("Bersihkan");
+        btnbersihlayan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbersihlayanActionPerformed(evt);
+            }
+        });
         btnbersihlayan.setBounds(250, 330, 100, 23);
         jLayeredPane2.add(btnbersihlayan, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtlayanan.setBounds(140, 20, 170, 30);
@@ -745,7 +759,7 @@ public class tambah_layanan extends javax.swing.JPanel {
     }//GEN-LAST:event_btnsimpanlayanActionPerformed
 
     private void txttotalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txttotalMouseClicked
-        // TODO add your handling code here:
+       hitung();
     }//GEN-LAST:event_txttotalMouseClicked
 
     private void tblcaripetugasmedisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblcaripetugasmedisMouseClicked
@@ -781,6 +795,10 @@ public class tambah_layanan extends javax.swing.JPanel {
     private void txtpetugasmedisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtpetugasmedisMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_txtpetugasmedisMouseClicked
+
+    private void btnbersihlayanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbersihlayanActionPerformed
+       bersih();
+    }//GEN-LAST:event_btnbersihlayanActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnbersihlayan;

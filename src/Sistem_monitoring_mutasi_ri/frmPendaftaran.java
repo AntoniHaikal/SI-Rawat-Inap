@@ -211,6 +211,7 @@ public class frmPendaftaran extends javax.swing.JInternalFrame implements YuliIn
         String pre_l = (String) jComboBox5.getSelectedItem();
         String[] pra_l = pre_l.split(" - ");
         String l = pra_l[1];
+        System.out.println(l);
         try {
             preparestatement = (PreparedStatement) koneksi.getConnection().prepareCall("call tambahregpasien(?, ?, ?, ?, ?)");
             preparestatement.setString(1, a);
@@ -253,14 +254,12 @@ public class frmPendaftaran extends javax.swing.JInternalFrame implements YuliIn
     private void initComponents() {
 
         jLayeredPane2 = new javax.swing.JLayeredPane();
-        jLabel13 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
@@ -284,10 +283,6 @@ public class frmPendaftaran extends javax.swing.JInternalFrame implements YuliIn
         setTitle("Registrasi Pasien Rawat Inap");
 
         jLayeredPane2.setBorder(javax.swing.BorderFactory.createTitledBorder("Data Pendaftaran"));
-
-        jLabel13.setText("tahun");
-        jLabel13.setBounds(360, 160, 50, 14);
-        jLayeredPane2.add(jLabel13, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jTextField1.setBounds(140, 30, 250, 30);
         jLayeredPane2.add(jTextField1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -305,11 +300,9 @@ public class frmPendaftaran extends javax.swing.JInternalFrame implements YuliIn
         jLabel5.setBounds(10, 110, 100, 14);
         jLayeredPane2.add(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jLabel6.setText("Tanggal Lahir / Umur");
+        jLabel6.setText("Tanggal Lahir");
         jLabel6.setBounds(10, 150, 120, 14);
         jLayeredPane2.add(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jTextField5.setBounds(280, 150, 70, 30);
-        jLayeredPane2.add(jTextField5, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel7.setText("Dokter");
         jLabel7.setBounds(10, 190, 90, 14);
@@ -332,7 +325,7 @@ public class frmPendaftaran extends javax.swing.JInternalFrame implements YuliIn
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.setBounds(140, 230, 250, 30);
         jLayeredPane2.add(jComboBox1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDateChooser1.setBounds(140, 150, 130, 30);
+        jDateChooser1.setBounds(140, 150, 250, 30);
         jLayeredPane2.add(jDateChooser1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -421,7 +414,7 @@ public class frmPendaftaran extends javax.swing.JInternalFrame implements YuliIn
                     .addGroup(layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 459, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         jLayeredPane2.getAccessibleContext().setAccessibleName("Data Registrasi");
@@ -430,7 +423,7 @@ public class frmPendaftaran extends javax.swing.JInternalFrame implements YuliIn
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        frmCariMedrec page = new frmCariMedrec(DP);
+        frmCariMedrec page = new frmCariMedrec(DP,"",0);
         //DP.removeAll();
         //DP.repaint();
         page.setInterface(this);
@@ -478,7 +471,6 @@ public class frmPendaftaran extends javax.swing.JInternalFrame implements YuliIn
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -493,7 +485,6 @@ public class frmPendaftaran extends javax.swing.JInternalFrame implements YuliIn
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
 
     @Override

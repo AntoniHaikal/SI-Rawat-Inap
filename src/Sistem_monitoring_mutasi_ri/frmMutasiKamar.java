@@ -5,9 +5,16 @@
 package Sistem_monitoring_mutasi_ri;
 
 import Class.ArInterface;
-import Class.YuliInterface;
+import Class.Structure;
+import Class.koneksi;
+import com.mysql.jdbc.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,17 +22,99 @@ import javax.swing.table.DefaultTableModel;
  * @author yulianakusumawati
  */
 public class frmMutasiKamar extends javax.swing.JInternalFrame implements ArInterface {
-
-    private String dataku = null;
-    private ResultSet res;
+    
     DefaultTableModel tbl = new DefaultTableModel();
     JDesktopPane DP;
+    String Kirim;
+    PreparedStatement preparestatement;
+    ResultSet resultset;
+    Structure query = new Structure();
+    DefaultComboBoxModel combo1 = new DefaultComboBoxModel();
+    DefaultComboBoxModel combo2 = new DefaultComboBoxModel();
+    String data1;
+    String data2;
     
-    public frmMutasiKamar(JDesktopPane DP) {
+    public frmMutasiKamar(JDesktopPane DP, String Kirim) {
         initComponents();
         this.DP = DP;
+        this.Kirim = Kirim;
+        Splits();
+        DataTipeKamar();
+        DataTempatTidur();
+        jTextField1.setVisible(false);
+        jTextField3.setVisible(false);
     }
-
+    
+    private void Splits() {
+        String[] splits = Kirim.split(" ::: ");
+        jTextField1.setText(splits[2]);
+        jTextField2.setText(splits[0]);
+        jTextField3.setText(splits[1]);
+        jTextField4.setText(splits[5]);
+        jTextField9.setText(splits[7]);
+        jTextField7.setText(splits[8]);
+    }
+    
+    private void DataTipeKamar() {
+        try {
+            
+            preparestatement = (PreparedStatement) koneksi.getConnection().prepareStatement(query.MasterTipeKamar());
+            resultset = preparestatement.executeQuery();
+            while (resultset.next()) {
+                combo1.addElement(resultset.getString(2) + " - " + resultset.getString(1));
+            }
+            jComboBox3.setModel(combo1);
+        } catch (Exception e) {
+        }
+    }
+    
+    private void DataTempatTidur() {
+        try {
+            combo2.removeAllElements();
+            String pre_f = (String) jComboBox3.getSelectedItem();
+            String[] pra_f = pre_f.split(" - ");
+            String primary = pra_f[1];
+            preparestatement = (PreparedStatement) koneksi.getConnection().prepareStatement(query.MasterTempatTidur());
+            preparestatement.setString(1, primary);
+            resultset = preparestatement.executeQuery();
+            while (resultset.next()) {
+                combo2.addElement(resultset.getString(2) + " - " + resultset.getString(1));
+            }
+            jComboBox4.setModel(combo2);
+        } catch (Exception e) {
+        }
+    }
+    
+    private void DataHargaKamar() {
+        try {
+            String pre_f = (String) jComboBox3.getSelectedItem();
+            String[] pra_f = pre_f.split(" - ");
+            String primary = pra_f[1];
+            preparestatement = (PreparedStatement) koneksi.getConnection().prepareStatement(query.MasterHargaKamar());
+            preparestatement.setString(1, primary);
+            resultset = preparestatement.executeQuery();
+            while (resultset.next()) {
+                jTextField8.setText(resultset.getString(3));
+            }
+        } catch (Exception e) {
+        }
+    }
+    
+    private void setDate() {
+        try {
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date;
+            jDateChooser2.setDate(date = formatter.parse(jTextField3.getText()));
+            jDateChooser5.setDate(date = formatter.parse(jTextField1.getText()));
+        } catch (Exception e) {
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("D");
+        int day1 = Integer.parseInt(formatter.format(jDateChooser2.getDate()));
+        int day2 = Integer.parseInt(formatter.format(jDateChooser5.getDate()));
+        int dayc = day2 - day1;
+        jTextField5.setText(Integer.toString(dayc));
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,7 +126,6 @@ public class frmMutasiKamar extends javax.swing.JInternalFrame implements ArInte
 
         jLayeredPane2 = new javax.swing.JLayeredPane();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -47,7 +135,9 @@ public class frmMutasiKamar extends javax.swing.JInternalFrame implements ArInte
         jTextField4 = new javax.swing.JTextField();
         jTextField9 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        jDateChooser5 = new com.toedter.calendar.JDateChooser();
+        jButton1 = new javax.swing.JButton();
         jLayeredPane3 = new javax.swing.JLayeredPane();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
@@ -56,9 +146,12 @@ public class frmMutasiKamar extends javax.swing.JInternalFrame implements ArInte
         jComboBox4 = new javax.swing.JComboBox();
         jLabel14 = new javax.swing.JLabel();
         jTextField7 = new javax.swing.JTextField();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jDateChooser3 = new com.toedter.calendar.JDateChooser();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jTextField8 = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jToggleButton1 = new javax.swing.JToggleButton();
 
         setClosable(true);
         setTitle("Mutasi Kamar");
@@ -68,14 +161,6 @@ public class frmMutasiKamar extends javax.swing.JInternalFrame implements ArInte
         jLabel3.setText("Tanggal Masuk");
         jLabel3.setBounds(20, 40, 100, 14);
         jLayeredPane2.add(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-        jTextField1.setBounds(160, 30, 210, 30);
-        jLayeredPane2.add(jTextField1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel4.setText("Tanggal Keluar");
         jLabel4.setBounds(20, 80, 110, 14);
@@ -104,55 +189,85 @@ public class frmMutasiKamar extends javax.swing.JInternalFrame implements ArInte
         jLayeredPane2.add(jTextField9, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jTextField5.setBounds(160, 190, 210, 30);
         jLayeredPane2.add(jTextField5, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jTextField3.setBounds(160, 70, 210, 30);
-        jLayeredPane2.add(jTextField3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDateChooser2.setBounds(160, 30, 210, 30);
+        jLayeredPane2.add(jDateChooser2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDateChooser5.setBounds(160, 70, 210, 30);
+        jLayeredPane2.add(jDateChooser5, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jLayeredPane3.setBorder(javax.swing.BorderFactory.createTitledBorder("Data Kamar Baru"));
-
-        jLabel11.setText("Tanggal Masuk");
-        jLabel11.setBounds(20, 40, 100, 14);
-        jLayeredPane3.add(jLabel11, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        jLabel12.setText("Tipe Kamar");
-        jLabel12.setBounds(20, 80, 100, 14);
-        jLayeredPane3.add(jLabel12, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        jLabel13.setText("Tempat Tidur");
-        jLabel13.setBounds(20, 120, 100, 10);
-        jLayeredPane3.add(jLabel13, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox3.setBounds(140, 70, 210, 30);
-        jLayeredPane3.add(jComboBox3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox4.setBounds(140, 110, 210, 30);
-        jLayeredPane3.add(jComboBox4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        jLabel14.setText("Harga/hari");
-        jLabel14.setBounds(20, 160, 90, 14);
-        jLayeredPane3.add(jLabel14, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jTextField7.setBounds(140, 150, 210, 30);
-        jLayeredPane3.add(jTextField7, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDateChooser1.setBounds(140, 30, 210, 30);
-        jLayeredPane3.add(jDateChooser1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/simpan.png"))); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/batal.png"))); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jButton1.setBounds(310, 210, 40, 40);
-        jLayeredPane3.add(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jButton1.setBounds(310, 390, 49, 30);
+        jLayeredPane2.add(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cari.png"))); // NOI18N
-        jButton2.setText("Transaksi Kamar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jLayeredPane3.setBorder(javax.swing.BorderFactory.createTitledBorder("Data Kamar Baru"));
+
+        jLabel11.setText("Registrasi Id");
+        jLabel11.setBounds(20, 40, 100, 14);
+        jLayeredPane3.add(jLabel11, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jLabel12.setText("Tipe Kamar");
+        jLabel12.setBounds(20, 120, 100, 14);
+        jLayeredPane3.add(jLabel12, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jLabel13.setText("Tempat Tidur");
+        jLabel13.setBounds(20, 160, 100, 10);
+        jLayeredPane3.add(jLabel13, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jComboBox3ActionPerformed(evt);
             }
         });
+        jComboBox3.setBounds(140, 110, 210, 30);
+        jLayeredPane3.add(jComboBox3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox4.setBounds(140, 150, 210, 30);
+        jLayeredPane3.add(jComboBox4, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jLabel14.setText("Harga/hari");
+        jLabel14.setBounds(20, 200, 90, 14);
+        jLayeredPane3.add(jLabel14, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jTextField7.setBounds(140, 30, 210, 30);
+        jLayeredPane3.add(jTextField7, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jDateChooser3.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jDateChooser3PropertyChange(evt);
+            }
+        });
+        jDateChooser3.setBounds(140, 70, 210, 30);
+        jLayeredPane3.add(jDateChooser3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        jTextField1.setBounds(20, 250, 90, 30);
+        jLayeredPane3.add(jTextField1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jTextField3.setBounds(20, 290, 90, 30);
+        jLayeredPane3.add(jTextField3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jTextField8.setBounds(140, 190, 210, 30);
+        jLayeredPane3.add(jTextField8, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jLabel15.setText("Tanggal Masuk");
+        jLabel15.setBounds(20, 80, 100, 14);
+        jLayeredPane3.add(jLabel15, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/simpan.png"))); // NOI18N
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
+        jToggleButton1.setBounds(290, 390, 50, 30);
+        jLayeredPane3.add(jToggleButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -160,26 +275,19 @@ public class frmMutasiKamar extends javax.swing.JInternalFrame implements ArInte
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLayeredPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))))
+                .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLayeredPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLayeredPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(48, 48, 48))
+                    .addComponent(jLayeredPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                    .addComponent(jLayeredPane3))
+                .addContainerGap())
         );
 
         pack();
@@ -188,30 +296,76 @@ public class frmMutasiKamar extends javax.swing.JInternalFrame implements ArInte
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        setDate();
     }//GEN-LAST:event_jButton1ActionPerformed
+        
+    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
+        DataTempatTidur();
+        DataHargaKamar();
+    }//GEN-LAST:event_jComboBox3ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        frmTransaksiKamar page = new frmTransaksiKamar(DP);
-        //DP.removeAll();
-        page.setInterface(this);
-        DP.repaint();
-        DP.add(page);
-        page.show();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        
+        String a = jTextField7.getText();
+        String b = formatter.format(jDateChooser3.getDate());
+        String c1 = (String) jComboBox3.getSelectedItem();
+        String[] c2 = c1.split(" - ");
+        String c = c2[1];
+        String d1 = (String) jComboBox4.getSelectedItem();
+        String[] d2 = d1.split(" - ");
+        String d = d2[1];
+        String e = jTextField8.getText();
+        
+        PreparedStatement preparestatement;
+        try {
+            preparestatement = (PreparedStatement) koneksi.getConnection().prepareCall("call tambahmutasikamar(?, ?, ?, ?, ?, ?)");
+            preparestatement.setString(1, a);
+            preparestatement.setString(2, c);
+            preparestatement.setString(3, b);
+            preparestatement.setString(4, b);
+            preparestatement.setString(5, "1");
+            preparestatement.setString(6, e);
+            preparestatement.executeQuery();
+            JOptionPane.showMessageDialog(rootPane, "Mutasi kamar berhasil");
+            jToggleButton1.setEnabled(false);
+        } catch (Exception ex) {
+            ex.getMessage();
+        }
+        
+        try {
+            preparestatement = (PreparedStatement) koneksi.getConnection().prepareCall("call aturtempattidur(?)");
+            preparestatement.setString(1, d);
+            preparestatement.executeQuery();
+            JOptionPane.showMessageDialog(rootPane, "Registrasi berhasil");
+        } catch (Exception ex) {
+        }
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jDateChooser3PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooser3PropertyChange
+        try {
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date;
+            String a = formatter.format(jDateChooser3.getDate());
+            jDateChooser5.setDate(date = formatter.parse(a));
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_jDateChooser3PropertyChange
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jComboBox3;
     private javax.swing.JComboBox jComboBox4;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private com.toedter.calendar.JDateChooser jDateChooser2;
+    private com.toedter.calendar.JDateChooser jDateChooser3;
+    private com.toedter.calendar.JDateChooser jDateChooser5;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -226,19 +380,19 @@ public class frmMutasiKamar extends javax.swing.JInternalFrame implements ArInte
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
+    private javax.swing.JToggleButton jToggleButton1;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void Getting(String a, String b, String c, String d, String e, String f) {
-        jTextField1.setText(a);
-        jTextField3.setText(b);
-        jTextField4.setText(c);
-        jTextField9.setText(d);
+        try {
+            jTextField1.setText(a);
+            jTextField3.setText(b);
+            jTextField4.setText(c);
+            jTextField9.setText(d);
+        } catch (Exception fgg) {
+        }
     }
-
- 
-
-   
 }
-

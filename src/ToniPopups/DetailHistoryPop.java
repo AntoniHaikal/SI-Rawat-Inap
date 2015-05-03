@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JDialog;
 
 /**
  *
@@ -20,8 +21,10 @@ public class DetailHistoryPop extends javax.swing.JPanel {
     /**
      * Creates new form detailHistory
      */
+    
     public DetailHistoryPop() {
         initComponents();
+//        jButton1.setVisible(false);
     }
     
     public void tampilDetailRujukan(String a) {
@@ -207,9 +210,7 @@ public class DetailHistoryPop extends javax.swing.JPanel {
                             .addComponent(jLabel9)
                             .addComponent(intrnalRadio)
                             .addComponent(ekRadio)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel8))
                 .addGap(39, 39, 39))
         );
     }// </editor-fold>//GEN-END:initComponents

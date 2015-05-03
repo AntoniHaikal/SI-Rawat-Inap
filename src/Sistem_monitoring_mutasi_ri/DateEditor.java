@@ -1,0 +1,37 @@
+package Sistem_monitoring_mutasi_ri;
+
+import com.toedter.calendar.JDateChooser;
+import java.awt.Component;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JCheckBox;
+import javax.swing.JTable;
+
+public class DateEditor extends DefaultCellEditor implements ItemListener {
+
+    private JDateChooser dc;
+
+    public DateEditor(JCheckBox checkBox) {
+        super(checkBox);
+    }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        if (value == null) {
+            return null;
+        }
+        dc = (JDateChooser) value;
+        return (Component) value;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        return dc;
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        super.fireEditingStopped();
+    }
+}

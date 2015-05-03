@@ -15,11 +15,15 @@ public class Structure {
     }
     
     public String Kamar() {
-        return "SELECT * FROM master_kamar WHERE nama_kamar LIKE ? ORDER BY nama_kamar ASC";
+        return "SELECT * FROM master_kamar WHERE nama_kamar LIKE ? OR kamar_id LIKE ? ORDER BY nama_kamar ASC";
     }
     
     public String TransaksiKamar() {
         return "SELECT * FROM trx_kamar WHERE regid LIKE ? ORDER BY trxkamar_id ASC";
+    }
+    
+    public String TransaksiKamarView() {
+        return "SELECT * FROM viewtrxkamar WHERE regid LIKE ? ORDER BY trxkamar_id ASC";
     }
     
     public String CekKamar() {
@@ -52,6 +56,10 @@ public class Structure {
     
     public String MasterTempatTidur() {
         return "SELECT * FROM master_ttidur WHERE kamar_id = ? AND status = 1";
+    }
+    
+    public String MasterTempatTidurX() {
+        return "SELECT * FROM master_ttidur WHERE status = 1";
     }
 
     public String MasterKelasKamar() {

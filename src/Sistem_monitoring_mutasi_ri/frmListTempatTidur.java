@@ -9,6 +9,7 @@ import Class.TableViews;
 import Class.koneksi;
 import com.mysql.jdbc.PreparedStatement;
 import java.sql.ResultSet;
+import javax.swing.JCheckBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +27,7 @@ public class frmListTempatTidur extends javax.swing.JInternalFrame {
     ResultSet resultset;
     Structure query = new Structure();
     String parameter;
+    private JCheckBox CheckBox = null;
 
     /**
      * Creates new form frmListTempatTidur
@@ -41,13 +43,18 @@ public class frmListTempatTidur extends javax.swing.JInternalFrame {
 
     private void ClearTable() {
         TableModels.getDataVector().removeAllElements();
-        jTable1.repaint();
+        TableModels.fireTableDataChanged();
     }
 
     private void SettingTableModel() {
-        TableModels = TableViews.getDefaultTableModel(new String[]{"No", "Nomor Tempat Tidur", "Status", ""}, null, new int[]{1,2}, null);
+        TableModels = TableViews.getDefaultTableModel(new String[]{"No", "Nomor Tempat Tidur", "Aksi", ""}, null, new int[]{1, 2}, null);
         jTable1.setModel(TableModels);
-        TableViews.table(jTable1, new int[]{50, 100, 100, 0});
+        TableViews.table(jTable1, new int[]{50, 250, 50, 0});
+    }
+
+    private void SettingCheckBoxModel(String identifier) {
+        jTable1.getColumn(identifier).setCellRenderer(new TableRenderer());
+        jTable1.getColumn(identifier).setCellEditor(new CheckBoxEditor(new JCheckBox()));
     }
 
     private void Data() {
@@ -66,12 +73,14 @@ public class frmListTempatTidur extends javax.swing.JInternalFrame {
                 preparestatement.setString(1, parameter);
                 resultset = preparestatement.executeQuery();
                 int n = 0;
+                SettingCheckBoxModel("Aksi");
                 while (resultset.next()) {
                     n++;
                     Object[] object = new Object[jTable1.getColumnCount()];
                     object[0] = n;
-                    object[1] = resultset.getString(1);
-                    object[2] = resultset.getString(3);
+                    object[1] = resultset.getString(2);
+                    object[2] = new JCheckBox();
+                    object[3] = resultset.getString(1);
                     TableModels.addRow(object);
 
                     Thread.sleep(10);
@@ -83,28 +92,65 @@ public class frmListTempatTidur extends javax.swing.JInternalFrame {
     }
 
     private void TambahKolom() {
-        
         Object[] object = new Object[jTable1.getColumnCount()];
         object[0] = jTable1.getRowCount() + 1;
         object[1] = "";
-        object[2] = "";
+        JCheckBox cb = new JCheckBox();
+        cb.disable();
+        object[2] = cb;
         TableModels.addRow(object);
     }
-    
+
     private void Save() {
         String a = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 1);
-        String b = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
         String c = parameter;
         try {
             preparestatement = (PreparedStatement) koneksi.getConnection().prepareCall("call tambahtempattidur(?, ?, ?)");
             preparestatement.setString(1, a);
             preparestatement.setString(2, c);
-            preparestatement.setString(3, b);
+            preparestatement.setString(3, "0");
             preparestatement.executeQuery();
-            System.out.println(a + " - " + b + " - " + c);
             JOptionPane.showMessageDialog(rootPane, "Tambah kamar berhasil");
         } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, "Tambah kamar gagal, Identitas telah digunakan");
         }
+        Data();
+    }
+
+    private void Update() {
+        String a = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 1);
+        String c = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 3);
+        try {
+            preparestatement = (PreparedStatement) koneksi.getConnection().prepareCall("call updatetempattidur(?,?)");
+            preparestatement.setString(1, a);
+            preparestatement.setString(2, c);
+            preparestatement.executeQuery();
+            JOptionPane.showMessageDialog(rootPane, "Update kamar berhasil");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, "Terjadi kesalahan");
+        }
+        Data();
+    }
+
+    private void Delete() {
+        String Primary = "";
+        int x = 0;
+        for (x = 0; x < jTable1.getRowCount(); x++) {
+            Primary = (String) jTable1.getValueAt(x, 3);
+            CheckBox = (JCheckBox) jTable1.getValueAt(x, 2);
+            if (CheckBox.isSelected()) {
+                try {
+                    preparestatement = (PreparedStatement) koneksi.getConnection().prepareCall("call hapustempattidur(?)");
+                    preparestatement.setString(1, Primary);
+                    preparestatement.executeQuery();
+                    System.out.println(Primary);
+                } catch (Exception e) {
+                }
+            } else {
+            }
+        }
+        JOptionPane.showMessageDialog(rootPane, "Hapus tempat tidur berhasil");
+        Data();
     }
 
     /**
@@ -121,6 +167,8 @@ public class frmListTempatTidur extends javax.swing.JInternalFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
 
         setClosable(true);
@@ -148,6 +196,22 @@ public class frmListTempatTidur extends javax.swing.JInternalFrame {
         });
         jMenu1.add(jMenuItem1);
 
+        jMenuItem3.setText("Hapus");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
+
+        jMenuItem4.setText("Edit");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem4);
+
         jMenuItem2.setText("Simpan");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -168,7 +232,7 @@ public class frmListTempatTidur extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
         );
 
         pack();
@@ -182,11 +246,20 @@ public class frmListTempatTidur extends javax.swing.JInternalFrame {
         Save();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        Delete();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        Update();
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

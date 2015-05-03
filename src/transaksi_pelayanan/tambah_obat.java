@@ -6,6 +6,7 @@ package transaksi_pelayanan;
 
 import Class.TableViews;
 import Class.koneksi;
+import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
@@ -188,6 +189,19 @@ public class tambah_obat extends javax.swing.JPanel {
          String now = hour.format(date);
          generate_trxobatid = ("trxobat" + now); 
      }
+       
+       private void clear(){
+           txthargaobt.setText("");
+           txtobat.setText("");
+           txtsatuanobt.setText("");
+           txttotalobt.setText("");
+       }
+       
+       private void hitung(){
+            int total = (Integer.parseInt(txthargaobt.getText()) * (Integer.parseInt(txtsatuanobt.getText())));
+            txttotalobt.setText(Integer.toString(total));           
+       }
+       
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -246,6 +260,12 @@ public class tambah_obat extends javax.swing.JPanel {
         jLabel7.setText("Total Harga");
         jLabel7.setBounds(20, 170, 70, 30);
         jLayeredPane2.add(jLabel7, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        txtsatuanobt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtsatuanobtKeyPressed(evt);
+            }
+        });
         txtsatuanobt.setBounds(140, 120, 110, 30);
         jLayeredPane2.add(txtsatuanobt, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -267,6 +287,11 @@ public class tambah_obat extends javax.swing.JPanel {
         jLayeredPane2.add(btnsimpanobat, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         btnbersihobt.setText("Bersihkan");
+        btnbersihobt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbersihobtActionPerformed(evt);
+            }
+        });
         btnbersihobt.setBounds(243, 220, 100, 23);
         jLayeredPane2.add(btnbersihobt, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtobat.setBounds(140, 20, 170, 30);
@@ -356,8 +381,7 @@ public class tambah_obat extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txttotalobtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txttotalobtMouseClicked
-        int total = (Integer.parseInt(txthargaobt.getText()) * (Integer.parseInt(txtsatuanobt.getText())));
-        txttotalobt.setText(Integer.toString(total));
+       hitung();
     }//GEN-LAST:event_txttotalobtMouseClicked
 
     private void btnsimpanobatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsimpanobatActionPerformed
@@ -379,6 +403,16 @@ public class tambah_obat extends javax.swing.JPanel {
         carimasterobat();
         informasi = 1;
     }//GEN-LAST:event_btncariobtActionPerformed
+
+    private void btnbersihobtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbersihobtActionPerformed
+        clear();
+    }//GEN-LAST:event_btnbersihobtActionPerformed
+
+    private void txtsatuanobtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsatuanobtKeyPressed
+          if(evt.getKeyCode()== KeyEvent.VK_ENTER){
+             hitung();
+         };
+    }//GEN-LAST:event_txtsatuanobtKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnbersihobt;

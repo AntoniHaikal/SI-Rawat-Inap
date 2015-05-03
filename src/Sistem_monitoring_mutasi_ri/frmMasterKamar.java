@@ -11,6 +11,7 @@ import com.mysql.jdbc.PreparedStatement;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
+import javax.swing.JCheckBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -27,15 +28,48 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
     PreparedStatement preparestatement;
     ResultSet resultset;
     Structure query = new Structure();
+    //String id;
 
     public frmMasterKamar(JDesktopPane DP) {
         initComponents();
-        jPanel2.setVisible(false);
-        Data();
-        SettingTableModel();
         this.DP = DP;
+        Click();
+        SettingTableModel();
+        Data();
+        jPanel2.setVisible(false);
     }
 
+    private void ClearTable() {
+        TableModels.getDataVector().removeAllElements();
+        TableModels.fireTableDataChanged();
+        jTable1.repaint();
+        jTable1.removeAll();
+    }
+
+    private void SettingTableModel() {
+        if (jCheckBox2.isSelected()) {
+            jCheckBox3.setVisible(true);
+            jCheckBox4.setVisible(true);
+            TableModels = TableViews.getDefaultTableModel(new String[]{"No", "Kamar ID", "Nama Kamar", "Harga", "Aksi", ""}, null, new int[]{2, 3, 4}, null);
+            jTable1.setModel(TableModels);
+            TableViews.table(jTable1, new int[]{50, 150, 100, 100, 50, 0});
+            Data();
+        } else {
+            jCheckBox3.setVisible(false);
+            jCheckBox4.setVisible(false);
+            TableModels = TableViews.getDefaultTableModel(new String[]{"No", "Kamar ID", "Nama Kamar", "Harga", "Aksi", ""}, null, null, null);
+            jTable1.setModel(TableModels);
+            TableViews.table(jTable1, new int[]{50, 150, 100, 100, 50, 0});
+            //Click();
+            Data();
+        }
+    }
+
+    private void SettingCheckBoxModel(String identifier) {
+        jTable1.getColumn(identifier).setCellRenderer(new TableRenderer());
+        jTable1.getColumn(identifier).setCellEditor(new CheckBoxEditor(new JCheckBox()));
+    }
+    
     private void Click() {
         jTable1.addMouseListener(new MouseAdapter() {
 
@@ -53,46 +87,18 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
         });
     }
 
-    private void ClearTable() {
-        TableModels.getDataVector().removeAllElements();
-        jTable1.repaint();
-    }
-
-    private void SettingTableModel() {
-        if (jCheckBox2.isSelected()) {
-            jCheckBox3.setVisible(true);
-            TableModels = TableViews.getDefaultTableModel(new String[]{"No", "Kamar ID", "Nama Kamar", "Harga", "Status", ""}, null, new int[]{2, 3, 4}, null);
-            jTable1.setModel(TableModels);
-            TableViews.table(jTable1, new int[]{50, 150, 100, 100, 100, 0});
-            Data();
-        } else {
-            jCheckBox3.setVisible(false);
-            TableModels = TableViews.getDefaultTableModel(new String[]{"No", "Kamar ID", "Nama Kamar", "Harga", "Status", ""}, null, null, null);
-            jTable1.setModel(TableModels);
-            TableViews.table(jTable1, new int[]{50, 150, 100, 100, 100, 0});
-            Data();
-            Click();
-        }
-    }
-
     private void Data() {
-        Thread thread = new Thread(new RunData());
-        thread.start();
-    }
-
-    private class RunData implements Runnable {
-
-        @Override
-        public void run() {
-            try {
+        try {
                 ClearTable();
 
                 String parameter = jTextField1.getText();
 
                 preparestatement = (PreparedStatement) koneksi.getConnection().prepareStatement(query.Kamar());
                 preparestatement.setString(1, "%" + parameter + "%");
+                preparestatement.setString(2, "%" + parameter + "%");
                 resultset = preparestatement.executeQuery();
                 int n = 0;
+                SettingCheckBoxModel("Aksi");
                 while (resultset.next()) {
                     n++;
                     Object[] object = new Object[jTable1.getColumnCount()];
@@ -100,7 +106,7 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
                     object[1] = resultset.getString(1);
                     object[2] = resultset.getString(2);
                     object[3] = resultset.getString(3);
-                    object[4] = resultset.getString(4);
+                    object[4] = new JCheckBox();
                     TableModels.addRow(object);
 
                     Thread.sleep(10);
@@ -108,8 +114,8 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
 
             } catch (Exception e) {
             }
-        }
     }
+
 
     private void SetupForm() {
         if (jCheckBox1.isSelected()) {
@@ -137,29 +143,65 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
     private void Update() {
         int x = 0;
         int y = jTable1.getRowCount();
-        int n = 0;
-        System.out.println(x + " - " + y);
         for (x = 0; x < y; x++) {
-            n = 0;
+     
             String a = (String) jTable1.getValueAt(x, 1);
             String b = (String) jTable1.getValueAt(x, 2);
             String c = (String) jTable1.getValueAt(x, 3);
-            String d = (String) jTable1.getValueAt(x, 4);
-            //System.out.println(a + " - " + b + " - " + c + " - " + d);
             try {
-                preparestatement = (PreparedStatement) koneksi.getConnection().prepareCall("call updatekamar(?, ?, ?, ?)");
+                preparestatement = (PreparedStatement) koneksi.getConnection().prepareCall("call updatekamar(?, ?, ?)");
                 preparestatement.setString(1, a);
                 preparestatement.setString(2, b);
                 preparestatement.setString(3, c);
-                preparestatement.setString(4, d);
                 preparestatement.executeQuery();
-
+                System.out.println("update " + x);
             } catch (Exception ex) {
             }
-            n++;
         }
         JOptionPane.showMessageDialog(rootPane, "Update kamar berhasil");
         jCheckBox3.setSelected(false);
+        Data();
+    }
+
+    private void Delete() {
+        String Primary = "";
+        JCheckBox CheckBox;
+        int x = 0;
+        for (x = 0; x < jTable1.getRowCount(); x++) {
+            Primary = (String) jTable1.getValueAt(x, 1);
+            CheckBox = (JCheckBox) jTable1.getValueAt(x, 4);
+            if (CheckBox.isSelected()) {
+                try {
+                    preparestatement = (PreparedStatement) koneksi.getConnection().prepareCall("call hapuskamar(?)");
+                    preparestatement.setString(1, Primary);
+                    preparestatement.executeQuery();
+                } catch (Exception e) {
+                }
+            } else {
+            }
+        }
+        JOptionPane.showMessageDialog(rootPane, "Hapus kamar berhasil");
+        jCheckBox4.setSelected(false);
+        Data();
+    }
+
+    private void GenerateId() {
+        try {
+            preparestatement = (PreparedStatement) koneksi.getConnection().prepareStatement(query.Generate());
+            resultset = preparestatement.executeQuery();
+            int y = 0;
+            while (resultset.next()) {
+                String x = resultset.getString(2);
+                y = Integer.parseInt(x) + 1;
+                jTextField2.setText("KA" + Integer.toString(y));
+                //id = Integer.toString(y);
+            }
+            //String a = jTextField1.getText();
+            preparestatement = (PreparedStatement) koneksi.getConnection().prepareCall("call generateid(1, ?)");
+            preparestatement.setInt(1, y);
+            preparestatement.executeQuery();
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -188,6 +230,7 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
         jTable1 = new javax.swing.JTable();
         jCheckBox2 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
+        jCheckBox4 = new javax.swing.JCheckBox();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -201,13 +244,18 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
         );
 
         setClosable(true);
+        setResizable(true);
         setTitle("Master Kamar");
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Tambah Kamar"));
+        jPanel2.setMaximumSize(new java.awt.Dimension(360, 215));
+        jPanel2.setMinimumSize(new java.awt.Dimension(360, 215));
 
         jLabel1.setText("Kode Kamar");
 
         jLabel2.setText("Nama Kamar");
+
+        jTextField2.setEnabled(false);
 
         jLabel3.setText("Harga Kamar");
 
@@ -239,7 +287,7 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
                         .addComponent(jTextField3))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -258,7 +306,7 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
                     .addComponent(jLabel3)
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -297,7 +345,7 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jCheckBox2.setText("Mode Pembaharuan");
+        jCheckBox2.setText("Mode Editor");
         jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox2ActionPerformed(evt);
@@ -305,10 +353,18 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
         });
 
         jCheckBox3.setForeground(new java.awt.Color(255, 0, 0));
-        jCheckBox3.setText("Selesai Memperbaharui");
+        jCheckBox3.setText("Ubah");
         jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox3ActionPerformed(evt);
+            }
+        });
+
+        jCheckBox4.setForeground(new java.awt.Color(255, 51, 0));
+        jCheckBox4.setText("Hapus");
+        jCheckBox4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox4ActionPerformed(evt);
             }
         });
 
@@ -320,33 +376,34 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
-                        .addGap(1, 1, 1))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jCheckBox1)
                         .addGap(18, 18, 18)
                         .addComponent(jCheckBox2)
                         .addGap(24, 24, 24)
                         .addComponent(jCheckBox3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jCheckBox4)
+                        .addGap(0, 485, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
+                                .addGap(1, 1, 1)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -354,12 +411,14 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel5))
                             .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jCheckBox1)
-                            .addComponent(jCheckBox3)
-                            .addComponent(jCheckBox2))
-                        .addGap(0, 22, Short.MAX_VALUE))))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBox1)
+                    .addComponent(jCheckBox3)
+                    .addComponent(jCheckBox2)
+                    .addComponent(jCheckBox4))
+                .addGap(0, 50, Short.MAX_VALUE))
         );
 
         pack();
@@ -375,10 +434,15 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         SetupForm();
+        GenerateId();
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Save();
+        GenerateId();
+        Data();
+        jTextField3.setText("");
+        jTextField4.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
@@ -388,12 +452,18 @@ public class frmMasterKamar extends javax.swing.JInternalFrame {
     private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
         Update();
     }//GEN-LAST:event_jCheckBox3ActionPerformed
+
+    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
+        Delete();
+    }//GEN-LAST:event_jCheckBox4ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton5;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
+    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
