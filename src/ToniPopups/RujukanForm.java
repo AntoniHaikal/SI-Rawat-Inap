@@ -70,7 +70,7 @@ public class RujukanForm extends javax.swing.JDialog {
             jd.setQuery(query);
             JasperReport jr = JasperCompileManager.compileReport(jd);
             JasperPrint jp = JasperFillManager.fillReport(jr, null, koneksi.getConnection());
-            JasperViewer.viewReport(jp);
+            JasperViewer.viewReport(jp,false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -8,6 +8,7 @@ import Sistem_monitoring_mutasi_ri.frmMasterKamar;
 import Sistem_monitoring_mutasi_ri.frmPendaftaran;
 import javax.swing.JDesktopPane;
 import javax.swing.UIManager;
+import sistem_rawat_inap_puskesmas.Master_User;
 import toniPackage.HistoryRujukan;
 import toniPackage.formDiagnosaRekap;
 
@@ -91,6 +92,11 @@ public class Main_rawat_inap extends javax.swing.JFrame {
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/User-Group-icon.png"))); // NOI18N
         jButton4.setText("Master User");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel_masterLayout = new javax.swing.GroupLayout(panel_master);
         panel_master.setLayout(panel_masterLayout);
@@ -429,6 +435,15 @@ public class Main_rawat_inap extends javax.swing.JFrame {
         DP.add(fr);
         fr.show();
     }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        Master_User mu = new Master_User(DP);
+        DP.removeAll();
+        DP.repaint();
+        DP.add(mu);
+        mu.show();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
