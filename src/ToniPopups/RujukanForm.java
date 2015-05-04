@@ -61,7 +61,7 @@ public class RujukanForm extends javax.swing.JDialog {
     private void cetak(String b) throws SQLException {
          System.out.println(""+b);
         try {
-            JasperDesign jd = JRXmlLoader.load("E:\\JasperWork\\TugasAkhirLaporan\\RujukanCetak2.jrxml");
+            JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream("/report/RujukanCetak2.jrxml"));
             String c = "select * from "
                     + "historyrujukan a, master_medrec b "
                     + "where a.medrec_id = b.medrec_id AND a.historyrujukan_id = '"+b+"'";

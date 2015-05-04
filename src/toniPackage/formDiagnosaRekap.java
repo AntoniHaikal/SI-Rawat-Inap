@@ -50,11 +50,40 @@ public class formDiagnosaRekap extends javax.swing.JInternalFrame {
             "Diagnosa Keluar"},
                 null, new int[]{4, 6, 8}, null);
         tblRekap.setModel(TableModels);
-        TableViews.table(tblRekap, new int[]{90,100, 100, 150, 150, 150});
+        TableViews.table(tblRekap, new int[]{90, 100, 100, 150, 150, 150});
     }
 
     private void tampil() {
 
+    }
+
+    private void cari() {
+        try {
+            TableModels.getDataVector().removeAllElements();
+            String query = "SELECT c.nama,c.medrec_id,a.regid,a.diagnosaawal,a.diagnosautama,a.diagnosakeluar "
+                    + "FROM "
+                    + "diagnosa a, regpasien b, master_medrec c "
+                    + "where a.regid=b.regid and b.medrec_id=c.medrec_id and b.medrec_id like ? "
+                    + "and c.nama like ? order by c.medrec_id";
+            PreparedStatement s = koneksi.getConnection().prepareStatement(query);
+            s.setString(1, "%" + txtmedrec.getText() + "%");
+            s.setString(2, "%" + txtnama.getText() + "%");
+            System.out.println("" + s);
+            ResultSet r = s.executeQuery();
+            while (r.next()) {
+                TableModels.addRow(new Object[]{
+                    r.getString(2),
+                    r.getString(3),
+                    r.getString(1),
+                    r.getString(4),
+                    r.getString(5),
+                    r.getString(6)});
+                tblRekap.setModel(TableModels);
+            }
+            s.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
 
     /**
@@ -175,13 +204,10 @@ public class formDiagnosaRekap extends javax.swing.JInternalFrame {
 
         tblRekap.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         tblRekap.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -202,7 +228,7 @@ public class formDiagnosaRekap extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLayeredPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLayeredPane2)
-                    .addComponent(jLayeredPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE))
+                    .addComponent(jLayeredPane3))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -221,64 +247,48 @@ public class formDiagnosaRekap extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtnamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnamaActionPerformed
-        // TODO add your handling code here:
+        SettingTableModel();
+        cari();
     }//GEN-LAST:event_txtnamaActionPerformed
 
     private void txtmedrecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtmedrecActionPerformed
         // TODO add your handling code here:
+        SettingTableModel();
+        cari();
     }//GEN-LAST:event_txtmedrecActionPerformed
 
     private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
-        // TODO add your handling code here:
         SettingTableModel();
-        try {
-            TableModels.getDataVector().removeAllElements();
-            String query = "SELECT c.nama,c.medrec_id,a.regid,a.diagnosaawal,a.diagnosautama,a.diagnosakeluar "
-                    + "FROM "
-                    + "diagnosa a, regpasien b, master_medrec c "
-                    + "where a.regid=b.regid and b.medrec_id=c.medrec_id and b.medrec_id like ? "
-                    + "and c.nama like ? order by c.medrec_id";
-            PreparedStatement s = koneksi.getConnection().prepareStatement(query);
-            s.setString(1, "%" + txtmedrec.getText() + "%");
-            s.setString(2, "%" + txtnama.getText() + "%");
-            System.out.println("" + s);
-            ResultSet r = s.executeQuery();
-            while (r.next()) {
-                TableModels.addRow(new Object[]{
-                    r.getString(2),
-                    r.getString(3),
-                    r.getString(1),
-                    r.getString(4),
-                    r.getString(5),
-                    r.getString(6)});
-                tblRekap.setModel(TableModels);
-            }
-            s.close();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
-        }
+        cari();
+//        System.out.println(tblRekap.getRowCount());
     }//GEN-LAST:event_btnCariActionPerformed
 
     private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
-        // TODO add your handling code here:
-         try {
-            JasperDesign jd = JRXmlLoader.load("E:\\JasperWork\\TugasAkhirLaporan\\DiagnosaPermedrec.jrxml");
-            String c = "SELECT * "
-                    + "FROM "
-                    + "diagnosa a, regpasien b, master_medrec c "
-                    + "where a.regid=b.regid and b.medrec_id=c.medrec_id and b.medrec_id ="+txtmedrec.getText();
-            JRDesignQuery query = new JRDesignQuery();
-            query.setText(c);
-            System.out.println(c + "");
-            jd.setQuery(query);
-            JasperReport jr = JasperCompileManager.compileReport(jd);
-            JasperPrint jp = JasperFillManager.fillReport(jr, null, koneksi.getConnection());
-            JasperViewer.viewReport(jp,false);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-
+//      int i = tblRekap.getSelectedRow();
+//        Object val = tblRekap.getValueAt(i, 0);
+        
+        if (tblRekap.getRowCount()!=0 && tblRekap.getSelectedRowCount()!=0) {
+            System.out.println(tblRekap.getRowCount());
+            try {
+                JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream("/report/DiagnosaPermedrec.jrxml"));
+                String c = "SELECT * "
+                        + "FROM "
+                        + "diagnosa a, regpasien b, master_medrec c "
+                        + "where a.regid=b.regid and b.medrec_id=c.medrec_id and b.medrec_id =" + txtmedrec.getText();
+                JRDesignQuery query = new JRDesignQuery();
+                query.setText(c);
+                System.out.println(c + "");
+                jd.setQuery(query);
+                JasperReport jr = JasperCompileManager.compileReport(jd);
+                JasperPrint jp = JasperFillManager.fillReport(jr, null, koneksi.getConnection());
+                JasperViewer.viewReport(jp, false);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            System.out.println("yo masukk");
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Data kosong atau data belum di klik");
         }
-
     }//GEN-LAST:event_btnCetakActionPerformed
 
     private void tblRekapMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRekapMouseClicked

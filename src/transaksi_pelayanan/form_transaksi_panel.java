@@ -15,6 +15,7 @@ import com.toedter.calendar.JDateChooser;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -943,7 +944,6 @@ public class form_transaksi_panel extends javax.swing.JInternalFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         main_rawat_inap rtp = new main_rawat_inap();
-//        RujukanInternalForm rf = new RujukanInternalForm();
         RujukanForm rf = new RujukanForm(null, true);
         rf.setA(txtregid.getText());
         rf.setMedrec(txtnomedrec.getText());
@@ -960,7 +960,7 @@ public class form_transaksi_panel extends javax.swing.JInternalFrame {
 
     private void btnCetakLayanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakLayanActionPerformed
         try {
-            JasperDesign jd = JRXmlLoader.load("E:\\JasperWork\\TugasAkhirLaporan\\Invoicelayanan.jrxml");
+            JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream("/report/Invoicelayanan.jrxml"));
             String c = "SELECT * FROM transaksi_layanan a, master_medrec b, regpasien c"
                     + " where a.regid=c.regid and b.medrec_id=c.medrec_id and a.regid = '" + txtregid.getText() + "'";
             JRDesignQuery query = new JRDesignQuery();
@@ -979,7 +979,7 @@ public class form_transaksi_panel extends javax.swing.JInternalFrame {
 
     private void btnCetakobatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakobatActionPerformed
         try {
-            JasperDesign jd = JRXmlLoader.load("E:\\JasperWork\\TugasAkhirLaporan\\Invoicelayanan.jrxml");
+            JasperDesign  jd = JRXmlLoader.load(getClass().getResourceAsStream("/report/TindakanObat.jrxml"));
             String c = "SELECT * FROM transaksi_obat a, master_medrec b, regpasien c"
                     + " where a.regid=c.regid and b.medrec_id=c.medrec_id and a.regid = '" + txtregid.getText() + "'";
             JRDesignQuery query = new JRDesignQuery();
@@ -997,7 +997,7 @@ public class form_transaksi_panel extends javax.swing.JInternalFrame {
 
     private void btnPaseinLedgerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaseinLedgerActionPerformed
         try {
-            JasperDesign jd = JRXmlLoader.load("E:\\JasperWork\\TugasAkhirLaporan\\PasienLedger.jrxml");
+            JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream("/report/PasienLedger.jrxml"));
             String c = "select * from trx_kamar a, master_kamar b, master_ttidur c, regpasien d, master_medrec e "
                     + "where a.regid=d.regid and d.medrec_id=e.medrec_id and a.kamar_id=b.kamar_id and b.kamar_id=c.kamar_id and c.status='1'";
             JRDesignQuery query = new JRDesignQuery();

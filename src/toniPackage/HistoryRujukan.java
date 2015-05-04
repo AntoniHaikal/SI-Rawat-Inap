@@ -272,7 +272,7 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
         int i = tblRujukan.getSelectedRow();
         if (i >= 0) {
             try {
-                JasperDesign jd = JRXmlLoader.load("E:\\JasperWork\\TugasAkhirLaporan\\RujukanCetak2.jrxml");
+                JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream("/report/RujukanCetak2.jrxml"));
                 String b = (String) tmr.getValueAt(i, 0);
                 String c = "select * from "
                         + "historyrujukan a, master_medrec b "
