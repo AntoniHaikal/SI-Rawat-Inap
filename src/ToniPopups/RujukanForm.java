@@ -119,9 +119,9 @@ public class RujukanForm extends javax.swing.JDialog {
 
         jLabel3.setText("Asal Rujukan");
 
-        jLabel4.setText("Petugas Di Rujuk");
+        jLabel4.setText("Petugas dituju");
 
-        jLabel5.setText("Tempat di Rujuk");
+        jLabel5.setText("Tempat dituju");
 
         jLabel6.setText("Tindakan yang telah diberikan");
 

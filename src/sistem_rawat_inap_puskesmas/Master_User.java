@@ -82,7 +82,7 @@ public class Master_User extends javax.swing.JInternalFrame {
             PreparedStatement statement = koneksi.getConnection().prepareStatement(query);
             statement.setNull(1, Types.INTEGER);
             statement.setString(2, txtusername.getText());
-            statement.setString(3, txtpassword.getText());
+            statement.setString(3, "1234567");
             statement.setString(4, (String) comboRole.getSelectedItem());
             statement.setString(5, txtnama.getText());
             statement.setString(6, "gambar");
@@ -99,16 +99,38 @@ public class Master_User extends javax.swing.JInternalFrame {
 
     }
 
+    private void reset() {
+        if (id != 0) {
+            try {
+                TableModels.getDataVector().removeAllElements();
+                String query = "update master_user set password =? where user_id = ?";
+                PreparedStatement statement = koneksi.getConnection().prepareStatement(query);
+                statement.setString(1, "1234567");
+                statement.setInt(2, id);
+                statement.executeUpdate();
+                TableModels.getDataVector().removeAllElements();
+                clear();
+                tampil();
+                statement.close();
+                JOptionPane.showMessageDialog(rootPane, "Data Berhasil diubah...");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Data Gagal diubah : " + e);
+            }
+        }else {
+            JOptionPane.showMessageDialog(rootPane, "Data belum di klik");
+        }
+
+    }
+
     private void update() {
         try {
             TableModels.getDataVector().removeAllElements();
-            String query = "update master_user set username =?, password =?,role=?,namauser=? where user_id = ?";
+            String query = "update master_user set username =?, role=?,namauser=? where user_id = ?";
             PreparedStatement statement = koneksi.getConnection().prepareStatement(query);
             statement.setString(1, txtusername.getText());
-            statement.setString(2, txtpassword.getText());
-            statement.setString(3, (String) comboRole.getSelectedItem());
-            statement.setString(4, txtnama.getText());
-            statement.setInt(5, id);
+            statement.setString(2, (String) comboRole.getSelectedItem());
+            statement.setString(3, txtnama.getText());
+            statement.setInt(4, id);
             statement.executeUpdate();
             TableModels.getDataVector().removeAllElements();
             clear();
@@ -167,7 +189,7 @@ public class Master_User extends javax.swing.JInternalFrame {
             while (res.next()) {
                 baris = res.getRow();
                 TableModels.addRow(new Object[]{
-                      res.getString("user_id"),
+                    res.getString("user_id"),
                     res.getString("username"),
                     res.getString("role"),
                     res.getString("namauser")
@@ -187,13 +209,7 @@ public class Master_User extends javax.swing.JInternalFrame {
 
     private void ambil() {
         int i = tabellayanan.getSelectedRow();
-//            int col = tabellayanan.getSelectedColumn();
-//            String dataterpilih = tabellayanan.getValueAt(row, col).toString();
-//            String ambil = tabellayanan.getValueAt(row, 0).toString();
-//            txtnama.setText(tabellayanan.getValueAt(row, 1).toString());
-//            txtusername.setText(tabellayanan.getValueAt(row, 2).toString());
-//            
-            id = Integer.parseInt((String) tabellayanan.getValueAt(i, 0));
+        id = Integer.parseInt((String) tabellayanan.getValueAt(i, 0));
         String sql = " Select * from master_user where user_id=?";
         try {
             PreparedStatement s = koneksi.getConnection().prepareStatement(sql);
@@ -202,7 +218,6 @@ public class Master_User extends javax.swing.JInternalFrame {
             while (res.next()) {
                 txtnama.setText(res.getString("namauser"));
                 txtusername.setText(res.getString("username"));
-                txtpassword.setText(res.getString("password"));
                 comboRole.setSelectedItem(res.getString("role"));
             }
         } catch (SQLException ex) {
@@ -214,7 +229,6 @@ public class Master_User extends javax.swing.JInternalFrame {
     private void clear() {
         txtusername.setText("");
         txtnama.setText("");
-        txtpassword.setText("");
         txtcari.setText("");
         btnsimpan.setEnabled(false);
         btnedit.setEnabled(false);
@@ -236,10 +250,9 @@ public class Master_User extends javax.swing.JInternalFrame {
         txtnama = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtusername = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         comboRole = new javax.swing.JComboBox();
-        txtpassword = new javax.swing.JTextField();
+        btnResetPassword = new javax.swing.JButton();
         jLayeredPane3 = new javax.swing.JLayeredPane();
         btnsimpan = new javax.swing.JButton();
         btnedit = new javax.swing.JButton();
@@ -268,11 +281,16 @@ public class Master_User extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Username");
 
-        jLabel5.setText("Password");
-
         jLabel6.setText("Role");
 
         comboRole.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2" }));
+
+        btnResetPassword.setText("Reset Password");
+        btnResetPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetPasswordActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jLayeredPane2Layout = new javax.swing.GroupLayout(jLayeredPane2);
         jLayeredPane2.setLayout(jLayeredPane2Layout);
@@ -288,13 +306,15 @@ public class Master_User extends javax.swing.JInternalFrame {
                     .addGroup(jLayeredPane2Layout.createSequentialGroup()
                         .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(30, 30, 30)
                         .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtusername)
-                            .addComponent(comboRole, 0, 180, Short.MAX_VALUE)
-                            .addComponent(txtpassword)))))
+                            .addComponent(comboRole, 0, 180, Short.MAX_VALUE)))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnResetPassword)
+                .addContainerGap())
         );
         jLayeredPane2Layout.setVerticalGroup(
             jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -309,22 +329,19 @@ public class Master_User extends javax.swing.JInternalFrame {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtpassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(comboRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(42, 42, 42))
+                .addGap(18, 18, 18)
+                .addComponent(btnResetPassword)
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         jLayeredPane2.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane2.setLayer(txtnama, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane2.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane2.setLayer(txtusername, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane2.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane2.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane2.setLayer(comboRole, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane2.setLayer(txtpassword, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(btnResetPassword, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLayeredPane3.setBorder(javax.swing.BorderFactory.createTitledBorder("Menu"));
 
@@ -494,7 +511,7 @@ public class Master_User extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         clear();
         btnsimpan.setEnabled(true);
-        
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -503,7 +520,14 @@ public class Master_User extends javax.swing.JInternalFrame {
         btnedit.setEnabled(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void btnResetPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetPasswordActionPerformed
+        // TODO add your handling code here:
+        reset();
+        clear();
+    }//GEN-LAST:event_btnResetPasswordActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnResetPassword;
     private javax.swing.JButton btncari;
     private javax.swing.JButton btndelete;
     private javax.swing.JButton btnedit;
@@ -517,7 +541,6 @@ public class Master_User extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLayeredPane jLayeredPane2;
@@ -527,7 +550,6 @@ public class Master_User extends javax.swing.JInternalFrame {
     private javax.swing.JTable tabellayanan;
     private javax.swing.JTextField txtcari;
     private javax.swing.JTextField txtnama;
-    private javax.swing.JTextField txtpassword;
     private javax.swing.JTextField txtusername;
     // End of variables declaration//GEN-END:variables
 }

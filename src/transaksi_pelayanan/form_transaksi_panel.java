@@ -252,50 +252,6 @@ public class form_transaksi_panel extends javax.swing.JInternalFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Data Gagal diubah : " + ex);
         }
-
-        /*int x = 0;
-         int y = tbltransaksilayanan.getColumnCount();
-         int n = 0;
-         System.out.println(x + " - " + y);
-         for (x = 0; x < y; x++) {
-         n = 0;
-         String a = (String) tbltransaksilayanan.getValueAt(x, 0);
-         String b = (String) tbltransaksilayanan.getValueAt(x, 1);
-         String c = (String) tbltransaksilayanan.getValueAt(x, 2);
-         String d = (String) tbltransaksilayanan.getValueAt(x, 3);
-         String e = (String) tbltransaksilayanan.getValueAt(x, 4);
-         String f = (String) tbltransaksilayanan.getValueAt(x, 5);
-         String g = (String) tbltransaksilayanan.getValueAt(x, 6);
-         String h = (String) tbltransaksilayanan.getValueAt(x, 7);
-         String i = (String) tbltransaksilayanan.getValueAt(x, 8);
-         String j = (String) tbltransaksilayanan.getValueAt(x, 9);
-         String k = (String) tbltransaksilayanan.getValueAt(x, 10);
-            
-         // System.out.println(a + " - " + b + " - " + c );
-         try {        
-         String query = "UPDATE trx_layanan SET regid = ?,"
-         + "layanan_id = ?,defaultharga = ?,satuan = ?,totalharga = ?,"
-         + "petugasbuat = 1, tanggalbuat = now() "
-         + "WHERE trxlayanan_id = ?";
-         PreparedStatement statement = koneksi.getConnection().prepareStatement(query);
-         statement.setString(1, b);
-         statement.setString(2, e);
-         statement.setString(3, g);
-         statement.setString(4, h);
-         statement.setString(5, i);
-         statement.setString(6, a);
-         statement.executeUpdate();
-         statement.close();           
-          
-         } catch (Exception ex) {
-         JOptionPane.showMessageDialog(null, "Data Gagal diubah : " + ex);
-         }
-         n++;
-         }
-         TableModels.getDataVector().removeAllElements();
-         table_model_trxlayanan();
-         JOptionPane.showMessageDialog(rootPane, "Data Berhasil diubah...");
-         cbtransaksilayanan.setSelected(false);*/
     }
 
     private void updatetrxobat() {
@@ -974,7 +930,6 @@ public class form_transaksi_panel extends javax.swing.JInternalFrame {
             ex.printStackTrace();
 
         }
-
     }//GEN-LAST:event_btnCetakLayanActionPerformed
 
     private void btnCetakobatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakobatActionPerformed

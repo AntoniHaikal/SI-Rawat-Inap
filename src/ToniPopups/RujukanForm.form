@@ -150,12 +150,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Petugas Di Rujuk"/>
+        <Property name="text" type="java.lang.String" value="Petugas dituju"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Tempat di Rujuk"/>
+        <Property name="text" type="java.lang.String" value="Tempat dituju"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
