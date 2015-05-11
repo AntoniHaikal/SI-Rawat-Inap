@@ -9,6 +9,8 @@ import Class.TableViews;
 import Class.koneksi;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -105,6 +107,7 @@ public class formDiagnosaRekap extends javax.swing.JInternalFrame {
         btnCari = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
         btnCetak = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jLayeredPane3 = new javax.swing.JLayeredPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblRekap = new javax.swing.JTable();
@@ -147,10 +150,17 @@ public class formDiagnosaRekap extends javax.swing.JInternalFrame {
             }
         });
 
-        btnCetak.setText("Cetak");
+        btnCetak.setText("Cetak Per Medrec");
         btnCetak.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCetakActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Cetak Rekap Diagnosa Per Bulan");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -166,7 +176,9 @@ public class formDiagnosaRekap extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtmedrec, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtmedrec))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jLayeredPane2Layout.createSequentialGroup()
@@ -188,8 +200,10 @@ public class formDiagnosaRekap extends javax.swing.JInternalFrame {
                         .addComponent(txtmedrec, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnCari, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnReset, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnCetak, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jLayeredPane2.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane2.setLayer(txtnama, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -198,6 +212,7 @@ public class formDiagnosaRekap extends javax.swing.JInternalFrame {
         jLayeredPane2.setLayer(btnCari, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane2.setLayer(btnReset, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane2.setLayer(btnCetak, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLayeredPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jLayeredPane3.setLayout(new java.awt.CardLayout());
@@ -303,11 +318,32 @@ public class formDiagnosaRekap extends javax.swing.JInternalFrame {
         txtmedrec.setText("");
     }//GEN-LAST:event_btnResetActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Map parameters = new HashMap();
+        parameters.put("Parameter1", "");
+        try {
+            JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream("/report/RekapHistoryRujukan.jrxml"));
+            String c = "select a.diagnosakeluar, b.NM_DIAGNOSA ,count(a.diagnosakeluar) as jumlahdignosa from "
+                    + "diagnosapasien a, icd10 b "
+                    + "where a.diagnosakeluar=b.ID_ICD and a.diagnosakeluar like '%o%' and a.diagnosakeluar like '%p%' "
+                    + " and MONTH(tanggalbuat) = MONTH(CURRENT_DATE())";
+            JRDesignQuery query = new JRDesignQuery();
+            query.setText(c);
+            jd.setQuery(query);
+            JasperReport jr = JasperCompileManager.compileReport(jd);
+            JasperPrint jp = JasperFillManager.fillReport(jr, parameters, koneksi.getConnection());
+            JasperViewer.viewReport(jp, false);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCari;
     private javax.swing.JButton btnCetak;
     private javax.swing.JButton btnReset;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
