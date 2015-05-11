@@ -4,10 +4,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/My%20Github/SIRAI/SI%20Rawat%20Inap/src/ToniPopups/RujukanForm.java</file>
-            <file>file:/E:/My%20Github/SIRAI/SI%20Rawat%20Inap/src/toniPackage/HistoryRujukanEntity.java</file>
+            <file>file:/E:/My%20Github/SIRAI/SI%20Rawat%20Inap/src/toniPackage/HistoryTransaksi.java</file>
             <file>file:/E:/My%20Github/SIRAI/SI%20Rawat%20Inap/src/toniPackage/HistoryRujukan.java</file>
-            <file>file:/E:/My%20Github/SIRAI/SI%20Rawat%20Inap/src/toniPackage/RujukanDao.java</file>
+            <file>file:/E:/My%20Github/SIRAI/SI%20Rawat%20Inap/src/report/historyTrxobat.jrxml</file>
+            <file>file:/E:/My%20Github/SIRAI/SI%20Rawat%20Inap/src/toniPackage/formDiagnosaRekap.java</file>
+            <file>file:/E:/My%20Github/SIRAI/SI%20Rawat%20Inap/src/transaksi_pelayanan/form_transaksi_panel.java</file>
+            <file>file:/E:/My%20Github/SIRAI/SI%20Rawat%20Inap/src/report/historyTrxlayanan.jrxml</file>
         </group>
     </open-files>
 </project-private>

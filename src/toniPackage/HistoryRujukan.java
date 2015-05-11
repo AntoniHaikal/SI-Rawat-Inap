@@ -9,7 +9,9 @@ import Class.koneksi;
 import ToniPopups.DetailHistoryPop;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableColumn;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -57,7 +59,7 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
         Date haha = new Date();
         perkutut = new Date(haha.getTime());
         try {
-            jDateChooser1.setDate(perkutut);
+            jDateChooser1.setDate(haha = format.parse("2015-01-01"));
             jDateChooser3.setDate(perkutut);
         } catch (Exception e) {
         }
@@ -163,6 +165,11 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
         });
 
         jButton1.setText("Cetak Rekap Per Tanggal");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -294,12 +301,34 @@ public class HistoryRujukan extends javax.swing.JInternalFrame {
                 ex.printStackTrace();
 
             }
-        }else {
+        } else {
             JOptionPane.showMessageDialog(null, "Data belum ada yang di diklik");
         }
 
 
     }//GEN-LAST:event_btnCetakActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String awal = format.format(jDateChooser1.getDate());
+        String akhir = format.format(jDateChooser3.getDate());
+        Map parameters = new HashMap();
+        parameters.put("Parameter1", awal);
+        parameters.put("Parameter2", akhir);
+        try {
+            JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream("/report/RekapHistoryRujukan.jrxml"));
+            String c = "select * from "
+                    + "historyrujukan a, master_medrec b "
+                    + "where a.medrec_id = b.medrec_id AND a.tanggalrujukan between '" + awal + "' and '" + akhir + "'";
+            JRDesignQuery query = new JRDesignQuery();
+            query.setText(c);
+            jd.setQuery(query);
+            JasperReport jr = JasperCompileManager.compileReport(jd);
+            JasperPrint jp = JasperFillManager.fillReport(jr, parameters, koneksi.getConnection());
+            JasperViewer.viewReport(jp, false);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
